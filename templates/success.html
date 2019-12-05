@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{% load leaflet_tags %}
+{% load static %}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>User Login</title>
+</head>
+ <script src="{% static "js/jquery.js" %}"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <script src="{% static "App/my_main.js" %}"></script>
+{% leaflet_js %}
+{% leaflet_css %}
+
+
+  <style>
+        #map {
+            width: 50%;
+            height: 60vh;
+        }
+
+    </style>
+<body>
+<div id="myMap"></div>
+<h1>Welcome {{ user }}, this is User Map</h1>
+
+<form name = 'form1' method = 'post' enctype="multipart/form-data">
+{{map.as_p}}
+    {{ miss }}
+    <br>
+<input type="submit" id = "form1" value = "Update" name = 'submit' />
+    <input type="submit"  id = "sub2" value = "transfer" name ="trans" style="display: none;"/>
+</form>
+<br>
+<button type="submit"  onclick="location.href='{% url 'mappage'%}'">
+    Reflash
+</button>
+<br>
+
+
+
+
+ <script type="text/javascript">
+
+{% for i in data %}
+
+var lat = {{ i.location.y }}
+
+var lon = {{ i.location.x }}
+
+    {% endfor %}
+
+        function map_init(map, options) {
+            map.setView([53.5, -8.5], 11);
+            console.log("Invalidating map size");
+            map.invalidateSize();
+            var myLatLon = L.latLng(lat, lon);
+            map.flyTo(myLatLon, 16);
+
+            {% for i in all %}
+            var lon1 = "{{ i.location.x }}";
+            var lat1 = "{{ i.location.y }}";
+            test = L.marker(L.latLng(lat1, lon1)).addTo(map);
+            test.bindPopup("Hello I am {{ i.username }}, {{i.describe}}");
+            test.on('mouseover', function (e) {
+            this.openPopup();
+            });
+            test.on('mouseout', function (e) {
+
+             });
+            test.on('click', function (e) {
+
+             document.form1.user2.value="{{i.username}}";
+             document.getElementById('sub2').click();
+
+             {#window.open("http://127.0.0.1:8000/chat");#}
+             });
+
+            {% endfor %}
+
+        }
+/*
+        function postto() {
+                $.ajax({
+                    type: "POST",
+                    url: 'chat',
+                    data: {
+                        point:
+                    }
+                }).done(function (data, status, xhr) {
+                    console.log(data["message"])
+                }).fail(function (xhr, status, error) {
+                    console.log(error);
+                }).always(function () {
+                    console.log("find_loc_ed finished");
+                });
+        }*/
+    </script>
+</body>
+</html>
+{% block content %}
+
+    {% leaflet_map "map" callback="window.map_init" %}
+
+    <div style="padding: 3em">
+        <p id="map-bbox" style="visibility: hidden; display: none"></p>
+        <p id="map-centre-lat" style="visibility: hidden; display: none"></p>
+        <p id="map-centre-lon" style="visibility: hidden; display: none"></p>
+
+
+    </div>
+{% endblock %}

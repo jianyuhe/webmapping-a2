@@ -1,0 +1,84 @@
+Metadata-Version: 2.1
+Name: fix_gdal
+Version: 0.0.7.dev0
+Summary: This package implements a pain-free way to install GDAL on a Windows-based computer for use with Django. For more detail
+Home-page: UNKNOWN
+License: UNKNOWN
+Author: Mark Foley
+Author-email: mark.foley@tudublin.ie
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python :: 3 :: Only
+Requires-Dist: django >=2.0
+
+# How to install the ***GDAL*** library on a Windows-based computer
+### This document describes the pain-free way to install ***GDAL*** on a ***Windows-based*** computer for use with ***Django***.
+
+> **WARNING: This package is for use on MS Windows-based machines only. The GDAL install process is much more sane and 
+>robust on Linux and MAC.** 
+
+**GDAL** stands for *Geospatial Data Abstraction Library*, and is a "Swiss army knife" of GIS data functionality. 
+A subset of GDAL is the OGR Simple Features Library, which specializes in reading and writing vector geographic data in a 
+variety of standard formats.
+
+**GeoDjango** provides a high-level Python interface for some of the capabilities of OGR, including the reading and coordinate 
+transformation of vector spatial data and minimal support for GDAL’s features with respect to raster (image) data. 
+
+Because GeoDjango takes advantage of the latest in the open source geospatial software technology, recent versions of the libraries
+are necessary. In my experience, installing ***GDAL*** on a Windows-based machine is a painful process. Following the process 
+in the GeoDjango installation documentation (<https://docs.djangoproject.com/en/2.2/ref/contrib/gis/install/#windows>) doesn't 
+seem to offer any guarantee that it will work. The issue seems to be that the appropriate DLL isn't being found at run time. 
+
+### What this package does
+
+Assuming that *Django* and *GDAL* are installed (see below), this package 
+
+1. Checks that you are running MS Windows. If not the process exits.
+1. Finds the version of *GDAL* installed.
+1. Finds a file (*<tt>libgdal.py</tt>*) in the *<tt>django.contrib.gis.gdal</tt>* library. This contains, among other things,
+a list of *DLLs* that it searches. This list seems to be out of date.
+1. Adds a new entry to the list in the form of "gdalxxx" where xxx is the version
+i.e 3.0.1 maps to gdal301.
+1. All this is performed by editing *<tt>libgdal.py</tt>*.
+
+### How to install and use this package
+
+#### The following instructions assume that your project already has ***Django*** installed.  
+
+Rather than following the process in the *GeoDjango* installation documentation, I suggest the following approach for each 
+new GeoDjango project.
+
+1. Download **<tt>GDAL‑x.y.z‑cpNN‑cpNNm‑winXXX.whl</tt>** from <https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal> where 
+*x.y.z* is the GDAL version and *cpNN* refers to the Python version that you are using. This will generally be cp36 or 
+cp37 corresponding to Python 3.6 or Python 3.7 but it can vary. Just make sure that you use the correct version. *winXXX*
+refers to the platform and will be either win32 or win_amd64. Choose the version appropriate for your system. Keep this file 
+as you'll need it for each new project. 
+1. In your PyCharm project ensure that your virtual environment is set up properly - you should see a **<tt>venv</tt>** 
+directory in your project. 
+1. From a terminal tab in the PyCharm project run 
+**<tt>pip install \<drive lettter\>:<full\path\to\downloaded\file>\<downloaded_file.whl></tt>** . This will install GDAL 
+into your virtual environment.
+1. Install ***this package*** using *<tt>pip</tt>* as per the instruction above.
+1. In your project's *<tt>settings.py</tt>* module, just ***after*** the line (usually around line 16) that says: 
+**<tt>BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</tt>** add the following:
+    <pre>
+    import fix_gdal
+    fix_gdal.fix()
+    </pre>
+
+    As always with Python, watch the indentation.
+
+1. Do a standard *<tt>pip install</tt>* of the *<tt>psycopg2</tt>* library. This is the driver for **PostgreSQL**.
+    
+
+Your ***GeoDjango*** project should now work properly.
+
+This is version **0.0.7-dev0** of this package.
+
+Author: Mark Foley (mark.foley@tudublin.ie), September 2019.
+

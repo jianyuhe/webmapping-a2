@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>User Login</title>
+</head>
+  <style type="text/css">
+    body{color:#efd;background:#453;padding:0 5em;margin:0}
+    h1{padding:2em 1em;background:#675}
+    h2{color:#bf8;border-top:1px dotted #fff;margin-top:2em}
+    p{margin:1em 0}
+  </style>
+<body>
+<h1>Register Page：</h1>
+
+<script type="text/javascript">
+    function getLocationConstant() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError);
+        } else {
+            alert("Your browser or device doesn't support Geolocation");
+        }
+    }
+
+    // If we have a successful location update
+    function onGeoSuccess(event) {
+        document.getElementById("Latitude").value = event.coords.latitude;
+        document.getElementById("Longitude").value = event.coords.longitude;
+        document.getElementById("Position1").value = event.coords.latitude + ", " + event.coords.longitude;
+
+    }
+
+    // If something has gone wrong with the geolocation request
+    function onGeoError(event) {
+        alert("Error code " + event.code + ". " + event.message);
+    }
+</script>
+
+<form method = 'post' enctype="multipart/form-data">
+{{uf.as_p}}
+{{errors}}
+{{succ}}
+<br>
+    <input type="button" value="Get Location" onclick="getLocationConstant()" />
+<br>
+    <br>
+<input type="submit" value = "Register" />
+</form>
+</br>
+<button type="submit"  onclick="location.href='{% url 'login'%}'">
+    Login
+</button>
+</body>
+</html>

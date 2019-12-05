@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+</head>
+<body>
+<h1>Welcome {{ user1 }}, You are communicate with {{ user2 }}</h1>
+<br><br>
+{% for i in data %}
+
+{{ i.text }}
+    <br>
+{% endfor %}
+<form method = 'post' enctype="multipart/form-data">
+{{chatf.as_p}}
+<input type="submit" value = "Update" name = 'submit' />
+
+</form>
+<br>
+<button type="submit"  onclick="location.href='{% url 'chat'%}'">
+    Reflash
+</button>
+<TD></TD>
+<button type="submit"  onclick="location.href='{% url 'mappage'%}'">
+    Back
+</button>
+</body>
+</html>
