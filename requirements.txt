@@ -6,7 +6,7 @@ django-extensions==2.2.5
 django-jquery==3.1.0
 django-leaflet==0.25.0
 django-pwa==1.0.5
-django==2.2.7
+django==2.2.21
 overpy==0.4
 psycopg2==2.8.4
 pydot==1.4.1
